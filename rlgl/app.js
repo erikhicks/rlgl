@@ -37,6 +37,7 @@ var piface = function (param, res) {
   switch (param) {
     case 'red':
     case 'green':
+    case 'off':
     case 'init':
     case 'off':
       child = exec('python ../changecolor.py ' + param,
@@ -64,6 +65,12 @@ var init = function (req, res) {
   res.end('init');
 };
 
+var off = function (req, res) {
+  piface('off');
+
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('off');
+};
 
 var changeColor = function (req, res) {
   var color = req.params.color;
@@ -118,7 +125,7 @@ var buildbot = function (req, response) {
 };
 
 app.get('/', routes.index);
-app.get('/off', init);
+app.get('/off', off);
 app.get('/init', init);
 
 app.get('/light/:color', changeColor);
