@@ -28,9 +28,11 @@ if ('development' == app.get('env')) {
 }
 
 
-var piface = function (param) {
+var piface = function (param, res) {
   var exec = require('child_process').exec,
     child;
+
+  res.writeHead(200, {'Content-Type': 'text/plain'});
 
   switch (param) {
     case 'red':
@@ -51,6 +53,8 @@ var piface = function (param) {
       console.log('unknown command');
   }
 
+  res.end('color: ' + color);
+
 };
 
 var init = function (req, res) {
@@ -64,10 +68,7 @@ var init = function (req, res) {
 var changeColor = function (req, res) {
   var color = req.params.color;
 
-  piface(color);
-
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('color: ' + color);
+  piface(color, res);
 };
 
 
