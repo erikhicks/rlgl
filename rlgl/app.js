@@ -27,30 +27,53 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
 
-app.get('/light/:color/:state', function (req, res) {
-   var color = req.params.color;
-   var state = req.params.state;
-
-   var util = require('util'),
-    exec = require('child_process').exec,
+var piface = function (param) {
+  var exec = require('child_process').exec,
     child;
 
-child = exec('python /home/pi/code/changecolor.py ' + color, // command line argument directly in string
-  function (error, stdout, stderr) {      // one easy function to capture data/errors
-    console.log('stdout: ' + stdout);
-    console.log('stderr: ' + stderr);
-    if (error !== null) {
-      console.log('exec error: ' + error);
-    }
-});
+  switch (param) {
+    case 'red':
+    case 'green':
+    case 'init':
+      child = exec('python ../changecolor.py ' + param,
+        function (error, stdout, stderr) {
+          console.log('stdout: ' + stdout);
+          console.log('stderr: ' + stderr);
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+      });
+      break;
 
+    default:
+      console.log('unknown command');
+  }
+
+};
+
+var init = function (req, res) {
+  piface('init');
 
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('color: ' + color + ' state: ' + state);
-});
+  res.end('init');
+};
+
+
+var changeColor = function (req, res) {
+  var color = req.params.color;
+
+  piface(color);
+
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('color: ' + color);
+};
+
+app.get('/', routes.index);
+app.get('/off', init);
+app.get('/init', init);
+
+app.get('/light/:color', changeColor);
 
 
 http.createServer(app).listen(app.get('port'), function(){
