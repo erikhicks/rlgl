@@ -36,6 +36,7 @@ var piface = function (param) {
     case 'red':
     case 'green':
     case 'init':
+    case 'off':
       child = exec('python ../changecolor.py ' + param,
         function (error, stdout, stderr) {
           console.log('stdout: ' + stdout);
@@ -69,12 +70,59 @@ var changeColor = function (req, res) {
   res.end('color: ' + color);
 };
 
+
+var buildbot = function (req, response) {
+  // http://mobiletools.doubledowninteractive.com:8088/json/builders/Dev%20Continuous%20Builder?select=&select=slaves&as_text=1
+  var options = {
+    host: 'mobiletools.doubledowninteractive.com',
+    port: 8088,
+    path: '/json/builders/Dev%20Continuous%20Builder'
+  };
+
+  http.get(options, function(res) {
+    var pageData = "";
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+      pageData += chunk;
+    });
+
+    res.on('end', function(){
+      var data = JSON.parse(pageData);
+      if (data && data.state === 'building') {
+        response.end('building');
+      } else {
+        options.path += '/builds/-1';
+        pageData = "";
+        http.get(options, function (res) {
+          res.on('data', function (chunk) {
+            pageData += chunk;
+          });
+          res.on('end', function(){
+            data = JSON.parse(pageData);
+            if (data && data.text) {
+              response.end(JSON.stringify(data.text));
+            } else {
+              repsonse.end('error');
+            }
+            
+          });
+        });
+      }
+    });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+    response.writeHead(200, {'Content-Type': 'text/plain'});
+    response.end('error: ' + color);
+  });
+};
+
 app.get('/', routes.index);
 app.get('/off', init);
 app.get('/init', init);
 
 app.get('/light/:color', changeColor);
 
+app.get('/buildbot', buildbot);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
