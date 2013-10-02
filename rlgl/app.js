@@ -13,7 +13,8 @@ var app = express();
 
 var BB_HOST = 'mobiletools.doubledowninteractive.com';
 var BB_PORT = 8088;
-var BB_BRANCH = '/json/builders/Dev%20Continuous%20Builder';
+//var BB_BRANCH = '/json/builders/Dev%20Continuous%20Builder';
+var BB_BRANCH = '/json/builders/MStaging%20Full%20Builder';
 
 // all environments
 app.set('port', process.env.PORT || 3000);
