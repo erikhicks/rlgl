@@ -15,7 +15,7 @@ def all_off():
   green.turn_off()
   yellow.turn_off()
 
-if (len(sys.argv) == 1):
+if (len(sys.argv) == 2):
 
   if (sys.argv[1] == 'red'):
     red.turn_on()
@@ -38,7 +38,7 @@ if (len(sys.argv) == 1):
   if (sys.argv[1] == 'off'):
     all_off()
 
-if (len(sys.argv) == 2):
+if (len(sys.argv) == 3):
 
   if (sys.argv[2] == 'on'):
 
