@@ -28,15 +28,14 @@ if ('development' == app.get('env')) {
 }
 
 
-var piface = function (param, res) {
+var piface = function (param) {
   var exec = require('child_process').exec,
     child;
-
-  res.writeHead(200, {'Content-Type': 'text/plain'});
 
   switch (param) {
     case 'red':
     case 'green':
+    case 'yellow':
     case 'off':
     case 'init':
       child = exec('python ../changecolor.py ' + param,
@@ -52,9 +51,6 @@ var piface = function (param, res) {
     default:
       console.log('unknown command');
   }
-
-  res.end('color: ' + color);
-
 };
 
 var init = function (req, res) {
@@ -74,11 +70,15 @@ var off = function (req, res) {
 var changeColor = function (req, res) {
   var color = req.params.color;
 
-  piface(color, res);
+  piface(color);
+
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('color');
 };
 
 
-var buildbot = function (req, response) {
+// Determine if the build is idle/building
+var isBuildActive = function (cb) {
   // http://mobiletools.doubledowninteractive.com:8088/json/builders/Dev%20Continuous%20Builder?select=&select=slaves&as_text=1
   var options = {
     host: 'mobiletools.doubledowninteractive.com',
@@ -96,31 +96,78 @@ var buildbot = function (req, response) {
     res.on('end', function(){
       var data = JSON.parse(pageData);
       if (data && data.state === 'building') {
-        response.end('building');
+        cb(true);
       } else {
-        options.path += '/builds/-1';
-        pageData = "";
-        http.get(options, function (res) {
-          res.on('data', function (chunk) {
-            pageData += chunk;
-          });
-          res.on('end', function(){
-            data = JSON.parse(pageData);
-            if (data && data.text) {
-              response.end(JSON.stringify(data.text));
-            } else {
-              repsonse.end('error');
-            }
-            
-          });
-        });
+        cb(false);
       }
     });
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.end('error: ' + color);
+    cb(false);
   });
+};
+
+
+var isBuildSuccess = function (cb) {
+  var options = {
+    host: 'mobiletools.doubledowninteractive.com',
+    port: 8088,
+    path: '/json/builders/Dev%20Continuous%20Builder/builds/-1'
+  };
+
+  http.get(options, function(res) {
+    var pageData = "";
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+      pageData += chunk;
+    });
+
+    res.on('end', function(){
+      data = JSON.parse(pageData);
+      if (data && data.text) {
+        console.log(JSON.stringify(data.text));
+        var isSuccess = data.text[1] === 'successful';
+        cb(isSuccess);
+      } else {
+        cb(false);
+      }
+    });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+    cb(false);
+  });
+};
+
+
+var buildbot = function (req, res) {
+
+  isBuildSuccess(function (success) {
+    //turn on green/red
+    if (success) {
+      piface('green');
+      console.log('green');
+    } else {
+      piface('red');
+      console.log('red');
+    }
+  });
+
+  isBuildActive(function (active) {
+    //turn on/off yellow
+    if (active) {
+      piface('yellow');
+      console.log('active');
+    } else {
+      //piface('off'); TODO turn yellow off
+      console.log('idle');
+    }
+  });
+
+  if (res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('buildbot');
+  }
+
 };
 
 app.get('/', routes.index);
@@ -130,6 +177,8 @@ app.get('/init', init);
 app.get('/light/:color', changeColor);
 
 app.get('/buildbot', buildbot);
+
+setInterval(buildbot, 5000);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
