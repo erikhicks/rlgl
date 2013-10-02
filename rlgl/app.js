@@ -144,10 +144,10 @@ var buildbot = function (req, res) {
   isBuildSuccess(function (success) {
     //turn on green/red
     if (success) {
-      piface('green');
+      //piface('green');
       console.log('green');
     } else {
-      piface('red');
+      //piface('red');
       console.log('red');
     }
   });
@@ -158,7 +158,7 @@ var buildbot = function (req, res) {
       piface('yellow');
       console.log('active');
     } else {
-      //piface('off'); TODO turn yellow off
+      piface('off'); //TODO turn yellow off
       console.log('idle');
     }
   });
