@@ -44,4 +44,14 @@ Day 1
 
 Day 2
 
+- added code to github (http://192.168.246.140:3000/init)
+
+- updated node.js service to query buildbot system
+
+- added external lamps controlled by the relay system 
+
+- realized that our buildbot system cannot query internal devices since it is outside of the network
+
+
+Day 3
 

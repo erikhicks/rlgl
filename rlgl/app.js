@@ -39,7 +39,6 @@ var piface = function (param, res) {
     case 'green':
     case 'off':
     case 'init':
-    case 'off':
       child = exec('python ../changecolor.py ' + param,
         function (error, stdout, stderr) {
           console.log('stdout: ' + stdout);
