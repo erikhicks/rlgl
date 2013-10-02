@@ -52,6 +52,7 @@ Day 2
 
 - realized that our buildbot system cannot query internal devices since it is outside of the network
 
+- set up pi to automatically start services and update DNS on boot
 
 Day 3
 
