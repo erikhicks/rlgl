@@ -20,18 +20,11 @@ if (len(sys.argv) == 1):
   if (sys.argv[1] == 'red'):
     red.turn_on()
     green.turn_off()
-    yellow.turn_off()
-
+ 
   if (sys.argv[1] == 'green'):
     red.turn_off()
     green.turn_on()
-    yellow.turn_off()
-
-  if (sys.argv[1] == 'yellow'):
-    red.turn_off()
-    green.turn_off()
-    yellow.turn_on()
-
+ 
   if (sys.argv[1] == 'init'):
     piface.pfio.init()
     green.turn_on()
