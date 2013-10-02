@@ -11,6 +11,10 @@ var path = require('path');
 
 var app = express();
 
+var BB_HOST = 'mobiletools.doubledowninteractive.com';
+var BB_PORT = 8088;
+var BB_BRANCH = '/json/builders/Dev%20Continuous%20Builder';
+
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -35,9 +39,10 @@ var piface = function (param) {
   switch (param) {
     case 'red':
     case 'green':
-    case 'yellow':
     case 'off':
     case 'init':
+    case 'yellow off':
+    case 'yellow on':
       child = exec('python ../changecolor.py ' + param,
         function (error, stdout, stderr) {
           //console.log('stdout: ' + stdout);
@@ -81,9 +86,9 @@ var changeColor = function (req, res) {
 var isBuildActive = function (cb) {
   // http://mobiletools.doubledowninteractive.com:8088/json/builders/Dev%20Continuous%20Builder?select=&select=slaves&as_text=1
   var options = {
-    host: 'mobiletools.doubledowninteractive.com',
-    port: 8088,
-    path: '/json/builders/Dev%20Continuous%20Builder'
+    host: BB_HOST,
+    port: BB_PORT,
+    path: BB_BRANCH
   };
 
   http.get(options, function(res) {
@@ -110,9 +115,9 @@ var isBuildActive = function (cb) {
 
 var isBuildSuccess = function (cb) {
   var options = {
-    host: 'mobiletools.doubledowninteractive.com',
-    port: 8088,
-    path: '/json/builders/Dev%20Continuous%20Builder/builds/-1'
+    host: BB_HOST,
+    port: BB_PORT,
+    path: BB_BRANCH + '/builds/-1'
   };
 
   http.get(options, function(res) {
@@ -126,39 +131,36 @@ var isBuildSuccess = function (cb) {
       data = JSON.parse(pageData);
       if (data && data.text) {
         console.log(JSON.stringify(data.text));
-        var isSuccess = data.text[1] === 'successful';
-        cb(isSuccess);
-      } else {
-        cb(false);
+        cb(data);
       }
     });
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    cb(false);
   });
 };
 
 
 var buildbot = function (req, res) {
 
-  isBuildSuccess(function (success) {
-    //turn on green/red
-    if (success) {
-      //piface('green');
-      console.log('green');
-    } else {
-      //piface('red');
-      console.log('red');
+  isBuildSuccess(function (data) {
+    //turn on green if successful
+    if(data.text[1] === 'successful') {
+      piface('green');
+    }
+
+    //turn on red if failed
+    if(data.text[0] === 'failed') {
+      piface('red');
     }
   });
 
   isBuildActive(function (active) {
     //turn on/off yellow
     if (active) {
-      piface('yellow');
+      piface('yellow on');
       console.log('active');
     } else {
-      piface('off'); //TODO turn yellow off
+      piface('yellow off'); //TODO turn yellow off
       console.log('idle');
     }
   });
