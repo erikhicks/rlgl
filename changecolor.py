@@ -15,7 +15,7 @@ def all_off():
   green.turn_off()
   yellow.turn_off()
 
-if (len(sys.argv) > 1):
+if (len(sys.argv) == 1):
 
   if (sys.argv[1] == 'red'):
     red.turn_on()
@@ -44,6 +44,32 @@ if (len(sys.argv) > 1):
 
   if (sys.argv[1] == 'off'):
     all_off()
+
+if (len(sys.argv) == 2):
+
+  if (sys.argv[2] == 'on'):
+
+    if (sys.argv[1] == 'red'):
+      red.turn_on()
+
+    if (sys.argv[1] == 'green'):
+      green.turn_on()
+ 
+    if (sys.argv[1] == 'yellow'):
+      yellow.turn_on()
+
+  if (sys.argv[2] == 'off'):
+
+    if (sys.argv[1] == 'red'):
+      red.turn_off()
+
+    if (sys.argv[1] == 'green'):
+      green.turn_off()
+ 
+    if (sys.argv[1] == 'yellow'):
+      yellow.turn_off()
+
+
     
 # vim:ts=2:sw=2:sts=2:et:ft=python
 
