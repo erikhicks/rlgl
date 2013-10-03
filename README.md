@@ -56,3 +56,9 @@ Day 2
 
 Day 3
 
+- purchased project box and outlets for lighting solution
+
+- completed pi logic for current build status light control
+
+- updated node service to account for 'building' status.  supported statuses are now successful|failed|building|interrupted
+
