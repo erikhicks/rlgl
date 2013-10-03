@@ -41,6 +41,7 @@ var piface = function (param) {
     case 'red':
     case 'green':
     case 'off':
+		case 'interrupted':
     case 'init':
     case 'yellow off':
     case 'yellow on':
@@ -152,6 +153,11 @@ var buildbot = function (req, res) {
     //turn on red if failed
     if(data.text[0] === 'failed') {
       piface('red');
+    }
+
+		//turn on purple/? if interrupted
+    if(data.text[0] === 'interrupted') {
+      piface('purple');
     }
   });
 
