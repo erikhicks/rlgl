@@ -31,8 +31,9 @@ if (len(sys.argv) == 2):
 		
 
   if (sys.argv[1] == 'purple'):
-    red.turn_off()
-    green.turn_off()
+    #red.turn_off()
+    #green.turn_off()
+    yellow.turn_off()
     purple.turn_on()
  
   if (sys.argv[1] == 'init'):
@@ -61,7 +62,7 @@ if (len(sys.argv) == 3):
       green.turn_on()
 
     if (sys.argv[1] == 'purple'):
-      green.turn_on()
+      purple.turn_on()
  
     if (sys.argv[1] == 'yellow'):
       yellow.turn_on()
@@ -78,7 +79,7 @@ if (len(sys.argv) == 3):
       yellow.turn_off()
 
     if (sys.argv[1] == 'purple'):
-      purple.turn_on()
+      purple.turn_off()
 
 
     

@@ -41,8 +41,10 @@ var piface = function (param) {
     case 'red':
     case 'green':
     case 'off':
-		case 'interrupted':
     case 'init':
+		case 'purple':
+    case 'purple on':
+    case 'purple off':
     case 'yellow off':
     case 'yellow on':
       child = exec('python ../changecolor.py ' + param,
@@ -157,8 +159,11 @@ var buildbot = function (req, res) {
 
 		//turn on purple/? if interrupted
     if(data.text[0] === 'exception') {
-      piface('purple');
+      piface('purple on');
+    } else {
+      piface('purple off');
     }
+
   });
 
   isBuildActive(function (active) {
