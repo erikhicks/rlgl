@@ -37,12 +37,15 @@ var piface = function (param) {
   var exec = require('child_process').exec,
     child;
 
+  param = param.trim();
+
   switch (param) {
     case 'red':
     case 'green':
     case 'off':
-		case 'interrupted':
     case 'init':
+    case 'purple on':
+    case 'purple off':
     case 'yellow off':
     case 'yellow on':
       child = exec('python ../changecolor.py ' + param,
@@ -75,12 +78,13 @@ var off = function (req, res) {
 };
 
 var changeColor = function (req, res) {
-  var color = req.params.color;
+  var color = req.params.color ? req.params.color : '';
+  var state = req.params.state ? req.params.state : '';
 
-  piface(color);
+  piface(color + ' ' + state);
 
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('color');
+  res.end('color:' + color + ' state:' + state);
 };
 
 
@@ -161,9 +165,12 @@ var buildbot = function (req, res) {
     }
 
 		//turn on purple/? if interrupted
-    if(data.text[0] === 'interrupted') {
-      piface('purple');
+    if(data.text[0] === 'exception') {
+      piface('purple on');
+    } else {
+      piface('purple off');
     }
+
   });
 
   isBuildActive(function (active) {
@@ -189,6 +196,7 @@ app.get('/off', off);
 app.get('/init', init);
 
 app.get('/light/:color', changeColor);
+app.get('/light/:color/:state', changeColor);
 
 app.get('/buildbot', buildbot);
 
