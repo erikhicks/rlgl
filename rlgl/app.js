@@ -42,7 +42,6 @@ var piface = function (param) {
     case 'green':
     case 'off':
     case 'init':
-		case 'purple':
     case 'purple on':
     case 'purple off':
     case 'yellow off':
@@ -77,12 +76,13 @@ var off = function (req, res) {
 };
 
 var changeColor = function (req, res) {
-  var color = req.params.color;
+  var color = req.params.color ? req.params.color : '';
+  var state = req.params.state ? req.params.state : '';
 
-  piface(color);
+  piface(color + ' ' + state);
 
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('color');
+  res.end('color:' + color + ' state:' + state);
 };
 
 
@@ -189,6 +189,7 @@ app.get('/off', off);
 app.get('/init', init);
 
 app.get('/light/:color', changeColor);
+app.get('/light/:color/:state', changeColor);
 
 app.get('/buildbot', buildbot);
 

@@ -2,6 +2,7 @@
 
 printf "RLGL: Starting node server...\n"
 cd /home/pi/code/rlgl
+forever stopall
 forever start -l forever.log --append -o out.log -e err.log app.js
 
 printf "RLGL: Initializing PiFace...\n"

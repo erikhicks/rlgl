@@ -29,12 +29,6 @@ if (len(sys.argv) == 2):
     purple.turn_off()
     green.turn_on()
 		
-
-  if (sys.argv[1] == 'purple'):
-    #red.turn_off()
-    #green.turn_off()
-    yellow.turn_off()
-    purple.turn_on()
  
   if (sys.argv[1] == 'init'):
     piface.pfio.init()
