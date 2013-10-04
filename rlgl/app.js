@@ -37,7 +37,9 @@ var piface = function (param) {
   var exec = require('child_process').exec,
     child;
 
-  switch (param.trim()) {
+  param = param.trim();
+
+  switch (param) {
     case 'red':
     case 'green':
     case 'off':
