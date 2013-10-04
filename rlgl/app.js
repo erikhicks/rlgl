@@ -154,6 +154,11 @@ var buildbot = function (req, res) {
     if(data.text[0] === 'failed') {
       piface('red');
     }
+    
+    //turn on red if warnings
+    if(data.text[0] === 'warnings') {
+      piface('red');
+    }
 
 		//turn on purple/? if interrupted
     if(data.text[0] === 'interrupted') {
