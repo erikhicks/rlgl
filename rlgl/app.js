@@ -156,7 +156,7 @@ var buildbot = function (req, res) {
     }
 
 		//turn on purple/? if interrupted
-    if(data.text[0] === 'interrupted') {
+    if(data.text[0] === 'exception') {
       piface('purple');
     }
   });
