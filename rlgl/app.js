@@ -13,7 +13,7 @@ var app = express();
 
 var BB_HOST = 'mobiletools.doubledowninteractive.com';
 var BB_PORT = 8088;
-var BB_BRANCH = '/json/builders/Dev%20Continuous%20Builder';
+var BB_BRANCH = '/json/builders/A.1.1%20Dev%20Continuous%20Builder';
 //var BB_BRANCH = '/json/builders/MStaging%20Full%20Builder';
 
 // all environments
@@ -90,7 +90,7 @@ var changeColor = function (req, res) {
 
 // Determine if the build is idle/building
 var isBuildActive = function (cb) {
-  // http://mobiletools.doubledowninteractive.com:8088/json/builders/Dev%20Continuous%20Builder?select=&select=slaves&as_text=1
+  // http://mobiletools.doubledowninteractive.com:8088/json/builders/A.1.1%20Dev%20Continuous%20Builder?select=&select=slaves&as_text=1
   var options = {
     host: BB_HOST,
     port: BB_PORT,
