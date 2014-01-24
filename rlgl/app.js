@@ -12,8 +12,8 @@ var path = require('path');
 var app = express();
 
 var BB_HOST = 'mobiletools.doubledowninteractive.com';
-var BB_PORT = 8088;
-var BB_BRANCH = '/json/builders/A.1.1%20Dev%20Continuous%20Builder';
+var BB_PORT = 8089;
+var BB_BRANCH = '/json/builders/Dev%20Continuous%20Builder';
 //var BB_BRANCH = '/json/builders/MStaging%20Full%20Builder';
 
 // all environments
